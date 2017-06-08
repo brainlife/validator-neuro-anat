@@ -34,8 +34,8 @@ else:
 		results['t1_mrinfo'] = info
 		info_lines = info.split("\n")
 
-		#check dimentions
-		dim=info_lines[3]
+		#check dimensions
+		dim=info_lines[4]
 		dims=dim.split("x")
 		if len(dims) != 3:
 			results['errors'].append("T1 should be 3D but has "+str(len(dims)))
