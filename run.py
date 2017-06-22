@@ -12,8 +12,8 @@ import subprocess
 # * raise warning if t1 transformation matrix isn't unit matrix (identity matrix)
 
 #display where this is running
-import socket
-print(socket.gethostname())
+#import socket
+#print(socket.gethostname())
 
 with open('config.json') as config_json:
     config = json.load(config_json)
@@ -25,13 +25,18 @@ results = {"errors": [], "warnings": []}
 
 directions = None
 
-if config['t1'] is None: 
-    results['errors'].append("t1 not set")
-else:
+#if config['t1'] is None: 
+#    results['errors'].append("t1 not set")
+#else:
+
+#TODO - I am not sure what I need to do differently between t1 and t2
+def validate_t1t2(config):
 	try:
-		print("running t1 mrinfo")
-		info = subprocess.check_output(["mrinfo", config['t1']], shell=False)
-		results['t1_mrinfo'] = info
+		print("running mrinfo")
+		info = subprocess.check_output(["mrinfo", config], shell=False)
+		results['t1_mrinfo'] = info #deprecated
+		results['mrinfo'] = info
+
 		info_lines = info.split("\n")
 
 		#check dimensions
@@ -55,10 +60,15 @@ else:
 		if m[0][0] == 1 and m[0][1] == 0 and m[0][1] == 0 and m[0][0] == 1 and m[0][1] == 0 and m[0][1] == 0 and m[0][0] == 1 and m[0][1] == 0 and m[0][1] == 0:
 			None #good
 		else:
-			results['warnings'].append("T1 has non-optimal transformation matrix. It should be 1 0 0 / 0 1 0 / 0 0 1")
+			results['warnings'].append("T1/T2 has non-optimal transformation matrix. It should be 1 0 0 / 0 1 0 / 0 0 1")
 
 	except subprocess.CalledProcessError as err:
-		results['errors'].append("mrinfo failed on t1. error code: "+str(err.returncode))
+		results['errors'].append("mrinfo failed on t1/t2. error code: "+str(err.returncode))
+
+if config.has_key('t1'):
+    validate_t1t2(config['t1'])
+if config.has_key('t2'):
+    validate_t1t2(config['t2'])
 
 with open("products.json", "w") as fp:
     json.dump([results], fp)
