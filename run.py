@@ -20,23 +20,14 @@ with open('config.json') as config_json:
 
 results = {"errors": [], "warnings": []}
 
-#TODO - how should I keep up wit this path?
-#mrinfo="/N/soft/rhel6/mrtrix/0.3.15/mrtrix3/release/bin/mrinfo"
-
 directions = None
 
-#if config['t1'] is None: 
-#    results['errors'].append("t1 not set")
-#else:
-
 #TODO - I am not sure what I need to do differently between t1 and t2
-def validate_t1t2(config):
+def validate_t1t2(path):
 	try:
 		print("running mrinfo")
-		info = subprocess.check_output(["mrinfo", config], shell=False)
-		results['t1_mrinfo'] = info #deprecated
-		results['mrinfo'] = info
-
+		info = subprocess.check_output(["mrinfo", path], shell=False)
+		results['detail'] = info
 		info_lines = info.split("\n")
 
 		#check dimensions
@@ -62,13 +53,23 @@ def validate_t1t2(config):
 		else:
 			results['warnings'].append("T1/T2 has non-optimal transformation matrix. It should be 1 0 0 / 0 1 0 / 0 0 1")
 
+
 	except subprocess.CalledProcessError as err:
 		results['errors'].append("mrinfo failed on t1/t2. error code: "+str(err.returncode))
 
 if config.has_key('t1'):
     validate_t1t2(config['t1'])
+
+    #TODO - normalize (for now, let's just symlink)
+    #TODO - if it's not .gz'ed, I should?
+    os.symlink(config['t1'], "t1.nii.gz")
+
 if config.has_key('t2'):
     validate_t1t2(config['t2'])
+
+    #TODO - normalize (for now, let's just symlink)
+    #TODO - if it's not .gz'ed, I should?
+    os.symlink(config['t2'], "t2.nii.gz")
 
 with open("products.json", "w") as fp:
     json.dump([results], fp)
