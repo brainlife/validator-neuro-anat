@@ -71,6 +71,9 @@ if config.has_key('t2'):
     #TODO - if it's not .gz'ed, I should?
     os.symlink(config['t2'], "t2.nii.gz")
 
+#deprecated
 with open("products.json", "w") as fp:
     json.dump([results], fp)
 
+with open("product.json", "w") as fp:
+    json.dump(results, fp)
