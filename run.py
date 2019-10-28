@@ -87,7 +87,7 @@ def validate_anat(path):
 
         results['brainlife'] = []
         image_a = io.BytesIO()
-        image_x.save(image_a, format='PNG')
+        image_x.save(image_a, format="JPEG")
         results['brainlife'].append({
             "type": "image/png",
             "name": "x "+str(slice_x_pos),
