@@ -86,14 +86,33 @@ def validate_anat(path):
         image_z.save('z.png')
 
         results['brainlife'] = []
-        image_a = io.BytesIO()
-        image_x.save(image_a, format="JPEG")
+
+        i = Image.open('x.png')
+        buf = io.BytesIO()
+        i.save(buf, format="PNG")
         results['brainlife'].append({
-            "type": "image/jpeg",
+            "type": "image/png",
             "name": "x "+str(slice_x_pos),
-            "base64": base64.b64encode(image_a.getvalue())
+            "base64": base64.b64encode(buf.getvalue())
         })
-        #
+
+        i = Image.open('y.png')
+        buf = io.BytesIO()
+        i.save(buf, format="PNG")
+        results['brainlife'].append({
+            "type": "image/png",
+            "name": "y "+str(slice_y_pos),
+            "base64": base64.b64encode(buf.getvalue())
+        })
+
+        i = Image.open('z.png')
+        buf = io.BytesIO()
+        i.save(buf, format="PNG")
+        results['brainlife'].append({
+            "type": "image/png",
+            "name": "z "+str(slice_z_pos),
+            "base64": base64.b64encode(buf.getvalue())
+        })        #
         #
         #################################################################
 
