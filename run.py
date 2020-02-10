@@ -120,23 +120,28 @@ def validate_anat(path):
         print(e)
         results['errors'].append("nibabel failed on t1. error code: " + str(e))
 
+try:
+    os.mkdir("output")
+except FileExistsError:
+    print("output already exist")
+
 if config.has_key('t1'):
     validate_anat(config['t1'])
 
     # TODO - normalize (for now, let's just symlink)
     # TODO - if it's not .gz'ed, I should?
-    if os.path.exists("t1.nii.gz"):
-        os.remove("t1.nii.gz")
-    os.symlink(config['t1'], "t1.nii.gz")
+    if os.path.exists("output/t1.nii.gz"):
+        os.remove("output/t1.nii.gz")
+    os.symlink(config['t1'], "output/t1.nii.gz")
 
 if config.has_key('t2'):
     validate_anat(config['t2'])
 
     # TODO - normalize (for now, let's just symlink)
     # TODO - if it's not .gz'ed, I should?
-    if os.path.exists("t2.nii.gz"):
-        os.remove("t2.nii.gz")
-    os.symlink(config['t2'], "t2.nii.gz")
+    if os.path.exists("output/t2.nii.gz"):
+        os.remove("output/t2.nii.gz")
+    os.symlink(config['t2'], "output/t2.nii.gz")
 
 with open("product.json", "w") as fp:
     json.dump(results, fp)
