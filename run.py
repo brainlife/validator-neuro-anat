@@ -122,8 +122,8 @@ def validate_anat(path):
 
 try:
     os.mkdir("output")
-except FileExistsError:
-    print("output already exist")
+except:
+    print('Directory already exists?')
 
 if config.has_key('t1'):
     validate_anat(config['t1'])
