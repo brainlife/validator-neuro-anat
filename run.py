@@ -120,10 +120,8 @@ def validate_anat(path):
         print(e)
         results['errors'].append("nibabel failed on t1. error code: " + str(e))
 
-try:
+if not os.path.exists("output"):
     os.mkdir("output")
-except:
-    print('Directory already exists?')
 
 if config.has_key('t1'):
     validate_anat(config['t1'])
@@ -146,3 +144,4 @@ if config.has_key('t2'):
 with open("product.json", "w") as fp:
     json.dump(results, fp)
 
+print("done");
