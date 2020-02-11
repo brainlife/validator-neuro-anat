@@ -130,7 +130,7 @@ if config.has_key('t1'):
     # TODO - if it's not .gz'ed, I should?
     if os.path.exists("output/t1.nii.gz"):
         os.remove("output/t1.nii.gz")
-    print("creating symlink from", config['ti'], "output/t1.nii.gz");
+    print("creating symlink from", config['t1'], "output/t1.nii.gz");
     print(os.getcwd())
     os.symlink(config['t1'], "output/t1.nii.gz")
 
