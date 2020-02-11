@@ -130,9 +130,7 @@ if config.has_key('t1'):
     # TODO - if it's not .gz'ed, I should?
     if os.path.exists("output/t1.nii.gz"):
         os.remove("output/t1.nii.gz")
-    print("creating symlink from", config['t1'], "output/t1.nii.gz");
-    print(os.getcwd())
-    os.symlink(config['t1'], "output/t1.nii.gz")
+    os.symlink("../"+config['t1'], "output/t1.nii.gz")
 
 if config.has_key('t2'):
     validate_anat(config['t2'])
@@ -141,7 +139,7 @@ if config.has_key('t2'):
     # TODO - if it's not .gz'ed, I should?
     if os.path.exists("output/t2.nii.gz"):
         os.remove("output/t2.nii.gz")
-    os.symlink(config['t2'], "output/t2.nii.gz")
+    os.symlink("../"+config['t2'], "output/t2.nii.gz")
 
 with open("product.json", "w") as fp:
     json.dump(results, fp)
