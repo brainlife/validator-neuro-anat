@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import os
 import json
@@ -67,9 +67,9 @@ def validate_anat(path):
         # save some mid slices
         #
         img_data = img.get_fdata()
-        slice_x_pos = img.header['dim'][1]/2
-        slice_y_pos = img.header['dim'][2]/2
-        slice_z_pos = img.header['dim'][3]/2
+        slice_x_pos = int(img.header['dim'][1]/2)
+        slice_y_pos = int(img.header['dim'][2]/2)
+        slice_z_pos = int(img.header['dim'][3]/2)
         slice_x = img_data[slice_x_pos, :, :]
         slice_y = img_data[:, slice_y_pos, :]
         slice_z = img_data[:, :, slice_z_pos]
@@ -93,7 +93,7 @@ def validate_anat(path):
         results['brainlife'].append({
             "type": "image/png",
             "name": "x "+str(slice_x_pos),
-            "base64": base64.b64encode(buf.getvalue())
+            "base64": base64.b64encode(buf.getvalue()).decode('ascii')
         })
 
         i = Image.open('y.png')
@@ -102,7 +102,7 @@ def validate_anat(path):
         results['brainlife'].append({
             "type": "image/png",
             "name": "y "+str(slice_y_pos),
-            "base64": base64.b64encode(buf.getvalue())
+            "base64": base64.b64encode(buf.getvalue()).decode('ascii')
         })
 
         i = Image.open('z.png')
@@ -111,7 +111,7 @@ def validate_anat(path):
         results['brainlife'].append({
             "type": "image/png",
             "name": "z "+str(slice_z_pos),
-            "base64": base64.b64encode(buf.getvalue())
+            "base64": base64.b64encode(buf.getvalue()).decode('ascii')
         })        #
         #
         #################################################################
@@ -123,21 +123,21 @@ def validate_anat(path):
 if not os.path.exists("output"):
     os.mkdir("output")
 
-if config.has_key('t1'):
+if 't1' in config:
     validate_anat(config['t1'])
 
     # TODO - normalize (for now, let's just symlink)
     # TODO - if it's not .gz'ed, I should?
-    if os.path.exists("output/t1.nii.gz"):
+    if os.path.lexists("output/t1.nii.gz"):
         os.remove("output/t1.nii.gz")
     os.symlink("../"+config['t1'], "output/t1.nii.gz")
 
-if config.has_key('t2'):
+if 't2' in config:
     validate_anat(config['t2'])
 
     # TODO - normalize (for now, let's just symlink)
     # TODO - if it's not .gz'ed, I should?
-    if os.path.exists("output/t2.nii.gz"):
+    if os.path.lexists("output/t2.nii.gz"):
         os.remove("output/t2.nii.gz")
     os.symlink("../"+config['t2'], "output/t2.nii.gz")
 
