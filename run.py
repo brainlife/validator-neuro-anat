@@ -26,6 +26,9 @@ results = {"errors": [], "warnings": []}
 
 directions = None
 
+if not os.path.exists("secondary"):
+    os.mkdir("secondary")
+
 def check_affine(affine):
     if affine[0][0] != 1: results['warnings'].append("transform matrix 0.1 is not 1")
     if affine[0][1] != 0: results['warnings'].append("transform matrix 0.2 is not 0")
@@ -41,6 +44,7 @@ def fix_level(image):
     image = image - np.min(image)
     image_max = np.max(image)
     return (image / image_max)*500
+
 
 # TODO - I am not sure what I need to do differently between t1 and t2
 def validate_anat(path):
@@ -79,15 +83,16 @@ def validate_anat(path):
         slice_z = fix_level(slice_z).T
 
         image_x = Image.fromarray(np.flipud(slice_x)).convert('L')
-        image_x.save('x.png')
+        image_x.save('secondary/x.png')
         image_y = Image.fromarray(np.flipud(slice_y)).convert('L')
-        image_y.save('y.png')
+        image_y.save('secondary/y.png')
         image_z = Image.fromarray(np.flipud(slice_z)).convert('L')
-        image_z.save('z.png')
+        image_z.save('secondary/z.png')
 
         results['brainlife'] = []
 
-        i = Image.open('x.png')
+        #copy secondary content to product.json (should I?)
+        i = Image.open('secondary/x.png')
         buf = io.BytesIO()
         i.save(buf, format="PNG")
         results['brainlife'].append({
@@ -96,7 +101,7 @@ def validate_anat(path):
             "base64": base64.b64encode(buf.getvalue()).decode('ascii')
         })
 
-        i = Image.open('y.png')
+        i = Image.open('secondary/y.png')
         buf = io.BytesIO()
         i.save(buf, format="PNG")
         results['brainlife'].append({
@@ -105,7 +110,7 @@ def validate_anat(path):
             "base64": base64.b64encode(buf.getvalue()).decode('ascii')
         })
 
-        i = Image.open('z.png')
+        i = Image.open('secondary/z.png')
         buf = io.BytesIO()
         i.save(buf, format="PNG")
         results['brainlife'].append({
