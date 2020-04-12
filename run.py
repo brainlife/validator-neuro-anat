@@ -146,6 +146,15 @@ if 't2' in config:
         os.remove("output/t2.nii.gz")
     os.symlink("../"+config['t2'], "output/t2.nii.gz")
 
+if 'flair' in config:
+    validate_anat(config['flair'])
+
+    # TODO - normalize (for now, let's just symlink)
+    # TODO - if it's not .gz'ed, I should?
+    if os.path.lexists("output/flair.nii.gz"):
+        os.remove("output/flair.nii.gz")
+    os.symlink("../"+config['flair'], "output/flair.nii.gz")
+
 with open("product.json", "w") as fp:
     json.dump(results, fp)
 
