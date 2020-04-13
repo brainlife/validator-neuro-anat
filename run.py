@@ -9,6 +9,7 @@ import numpy as np
 from PIL import Image, ImageDraw
 import io
 import base64
+import math
 # Things that this script checks
 # 
 # * make sure mrinfo runs successfully on specified t1 file
@@ -52,18 +53,25 @@ def validate_anat(path):
     try:
         #print('checking anatomy')
         img = nibabel.load(path)
-        results['headers'] = str(img.header)
-        results['base_affine'] = str(img.header.get_base_affine())
+        #results['headers'] = str(img.header)
+        #results['base_affine'] = str(img.header.get_base_affine())
+    
+        results['meta'] = {}
+        for key in img.header:
+            value = img.header[key]
+            results['meta'][key] = value
+
+        results['meta']['base_affine'] = img.header.get_base_affine()
 
         # check dimensions
         dims = img.header['dim'][0]
         if dims != 3:
             results['errors'].append("input should be 3D but has " + str(dims))
 
-        results['meta'] = {
-            "dim":img.header['dim'].tolist(),
-            "pixdim":img.header['pixdim'].tolist()
-        }
+        #results['meta'] = {
+        #    "dim":img.header['dim'].tolist(),
+        #    "pixdim":img.header['pixdim'].tolist()
+        #}
 
         check_affine(img.header.get_base_affine())
 
@@ -155,7 +163,29 @@ if 'flair' in config:
         os.remove("output/flair.nii.gz")
     os.symlink("../"+config['flair'], "output/flair.nii.gz")
 
+class NumpyEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, (np.int_, np.intc, np.intp, np.int8,
+            np.int16, np.int32, np.int64, np.uint8,
+            np.uint16, np.uint32, np.uint64)):
+            ret = int(obj)
+        elif isinstance(obj, (np.float_, np.float16, np.float32, np.float64)):
+            ret = float(obj)
+        elif isinstance(obj, (np.ndarray,)): 
+            ret = obj.tolist()
+        else:
+            ret = json.JSONEncoder.default(self, obj)
+
+        if isinstance(ret, (float)):
+            if math.isnan(ret):
+                ret = None
+
+        if isinstance(ret, (bytes, bytearray)):
+            ret = ret.decode("utf-8")
+
+        return ret
+
 with open("product.json", "w") as fp:
-    json.dump(results, fp)
+    json.dump(results, fp, cls=NumpyEncoder)
 
 print("done");
