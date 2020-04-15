@@ -73,7 +73,8 @@ def validate_anat(path):
         #    "pixdim":img.header['pixdim'].tolist()
         #}
 
-        check_affine(img.header.get_base_affine())
+        #affine shouldn't always be identity
+        #check_affine(img.header.get_base_affine())
 
         #################################################################
         # save some mid slices
