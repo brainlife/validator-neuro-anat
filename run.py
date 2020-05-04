@@ -32,9 +32,6 @@ directions = None
 if not os.path.exists("secondary"):
     os.mkdir("secondary")
 
-def is_gz_file(filepath):
-    with open(filepath, 'rb') as test_f:
-        return binascii.hexlify(test_f.read(2)) == b'1f8b'
 
 def check_affine(affine):
     if affine[0][0] != 1: results['warnings'].append("transform matrix 0.1 is not 1")
@@ -140,8 +137,10 @@ def validate_anat(path):
         print(e)
         results['errors'].append("nibabel failed on t1. error code: " + str(e))
 
-    if not is_gz_file(path):
-        results['errors'].append("file doesn't look like a gzip-ed nifti");
+    #check to make sure nifti starts with gzip marker
+    with open(path, 'rb') as test_f:
+        if binascii.hexlify(test_f.read(2)) != b'1f8b':
+            results['errors'].append("file doesn't look like a gzip-ed nifti");
 
 if not os.path.exists("output"):
     os.mkdir("output")
