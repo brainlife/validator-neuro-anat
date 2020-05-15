@@ -52,6 +52,11 @@ def fix_level(image):
 
 # TODO - I am not sure what I need to do differently between t1 and t2
 def validate_anat(path):
+    #check to make sure nifti starts with gzip marker
+    with open(path, 'rb') as test_f:
+        if binascii.hexlify(test_f.read(2)) != b'1f8b':
+            results['errors'].append("file doesn't look like a gzip-ed nifti");
+            return
 
     try:
         #print('checking anatomy')
@@ -59,12 +64,11 @@ def validate_anat(path):
         #results['headers'] = str(img.header)
         #results['base_affine'] = str(img.header.get_base_affine())
     
-        results['meta'] = {}
+        results['meta'] = {"nifti_headers": {}}
         for key in img.header:
             value = img.header[key]
-            results['meta'][key] = value
-
-        results['meta']['base_affine'] = img.header.get_base_affine()
+            results['meta']['nifti_headers'][key] = value
+        results['meta']['nifti_headers']['base_affine'] = img.header.get_base_affine()
 
         # check dimensions
         dims = img.header['dim'][0]
@@ -136,11 +140,6 @@ def validate_anat(path):
     except Exception as e:
         print(e)
         results['errors'].append("nibabel failed on t1. error code: " + str(e))
-
-    #check to make sure nifti starts with gzip marker
-    with open(path, 'rb') as test_f:
-        if binascii.hexlify(test_f.read(2)) != b'1f8b':
-            results['errors'].append("file doesn't look like a gzip-ed nifti");
 
 if not os.path.exists("output"):
     os.mkdir("output")
