@@ -32,7 +32,6 @@ directions = None
 if not os.path.exists("secondary"):
     os.mkdir("secondary")
 
-
 def check_affine(affine):
     if affine[0][0] != 1: results['warnings'].append("transform matrix 0.1 is not 1")
     if affine[0][1] != 0: results['warnings'].append("transform matrix 0.2 is not 0")
@@ -111,29 +110,31 @@ def validate_anat(path):
         i = Image.open('secondary/x.png')
         buf = io.BytesIO()
         i.save(buf, format="PNG")
-        results['brainlife'].append({
-            "type": "image/png",
-            "name": "x "+str(slice_x_pos),
-            "base64": base64.b64encode(buf.getvalue()).decode('ascii')
-        })
+        #results['brainlife'].append({
+        #    "type": "image/png",
+        #    "name": "x "+str(slice_x_pos),
+        #    "base64": base64.b64encode(buf.getvalue()).decode('ascii')
+        #})
 
         i = Image.open('secondary/y.png')
         buf = io.BytesIO()
         i.save(buf, format="PNG")
-        results['brainlife'].append({
-            "type": "image/png",
-            "name": "y "+str(slice_y_pos),
-            "base64": base64.b64encode(buf.getvalue()).decode('ascii')
-        })
+
+        #results['brainlife'].append({
+        #    "type": "image/png",
+        #    "name": "y "+str(slice_y_pos),
+        #    "base64": base64.b64encode(buf.getvalue()).decode('ascii')
+        #})
 
         i = Image.open('secondary/z.png')
         buf = io.BytesIO()
         i.save(buf, format="PNG")
-        results['brainlife'].append({
-            "type": "image/png",
-            "name": "z "+str(slice_z_pos),
-            "base64": base64.b64encode(buf.getvalue()).decode('ascii')
-        })        #
+
+        #results['brainlife'].append({
+        #    "type": "image/png",
+        #    "name": "z "+str(slice_z_pos),
+        #    "base64": base64.b64encode(buf.getvalue()).decode('ascii')
+        #})        #
         #
         #################################################################
 
