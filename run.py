@@ -75,7 +75,7 @@ def validate_anat(path):
         #results['headers'] = str(img.header)
         #results['base_affine'] = str(img.header.get_base_affine())
     
-        results['meta'] = {"nifti_headers": {}}
+        results['meta']["nifti_headers"] = {}
         for key in img.header:
             value = img.header[key]
             results['meta']['nifti_headers'][key] = value
