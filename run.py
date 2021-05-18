@@ -25,10 +25,22 @@ import binascii
 with open('config.json', encoding='utf8') as config_json:
     config = json.load(config_json)
 
-results = {"errors": [], "warnings": []}
+results = {
+    "errors": [], 
+    "warnings": [], 
+}
+
+#copy _input
+if "_inputs" in config:
+    iconfig = config["_inputs"][0]
+    if "meta" in iconfig:
+        results["meta"] = iconfig["meta"]
+    if "tags" in iconfig:
+        results["tags"] = iconfig["tags"]
+    if "datatype_tags" in iconfig:
+        results["datatype_tags"] = iconfig["datatype_tags"]
 
 directions = None
-
 if not os.path.exists("secondary"):
     os.mkdir("secondary")
 

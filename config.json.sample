@@ -1,4 +1,24 @@
 {
-    "t1": "testdata/5e93e694aa1f998a35ac4d22/t1.nii.gz"
+    "t1": "testdata/5e93e694aa1f998a35ac4d22/t1.nii.gz",
+    "_inputs": [
+        {
+            "id": "anat",
+            "datatype": "58c33bcee13a50849b25879a",
+            "desc": "New Test App",
+            "meta": {
+                "subject": "01",
+                "thing": "from product.json"
+            },
+            "tags": [
+                "from_app"
+            ],
+            "subdir": "anat",
+            "datatype_tags": [],
+            "task_id": "60a4400c2e0ce52cc3a743c3",
+            "keys": [
+                "t1"
+            ]
+        }
+    ]
 }
 
