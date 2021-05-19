@@ -28,6 +28,7 @@ with open('config.json', encoding='utf8') as config_json:
 results = {
     "errors": [], 
     "warnings": [], 
+    "meta": {},
 }
 
 #copy _input
